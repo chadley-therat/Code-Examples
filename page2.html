@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Other page</title>
+    <title>Encryption Utilities</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="styles.css" />
@@ -10,12 +10,86 @@
   <body>
     <nav>
       <a href="/">Home</a>
-      <a href="/page2.html" aria-current="page">Other page</a>
+      <a href="/page2.html" aria-current="page">Encryption Utility Activity</a>
     </nav>
     <main>
-      <h1>My other page</h1>
-        <pre>
+      <h1>String Encryption Utilities</h1>
+      <pre>
           <code>
+          Imports System
+          Imports System.Activities
+          Imports System.Security.Cryptography
+          
+          &lt;Activity(DisplayName:="Encrypt/Decrypt String")&gt;
+          Public Class EncryptDecryptString
+            Inherits CodeActivity
+          
+            &lt;Category("Input")&gt;
+            &lt;RequiredArgument&gt;
+            Public Property Key As InArgument(Of String)
+          
+            &lt;Category("Input")&gt;
+            &lt;RequiredArgument&gt;
+            Public Property Input As InArgument(Of String)
+          
+            &lt;Category("Input")&gt;
+            Public Property Encrypt As InArgument(Of Boolean)
+          
+            &lt;Category("Output")&gt;
+            Public Property Output As OutArgument(Of String)
+          
+            Protected Overrides Sub Execute(context As CodeActivityContext)
+              ' Get the input arguments.
+              Dim key As String = context.GetValue(Me.Key)
+              Dim input As String = context.GetValue(Me.Input)
+              Dim encrypt As Boolean = context.GetValue(Me.Encrypt)
+          
+              ' Use the AES algorithm to encrypt or decrypt the input string.
+              Dim output As String
+              If encrypt Then
+                output = EncryptString(input, key)
+              Else
+                output = DecryptString(input, key)
+              End If
+          
+              ' Set the output argument.
+              context.SetValue(Me.Output, output)
+            End Sub
+          
+            Private Function EncryptString(input As String, key As String) As String
+              ' Convert the input string to a byte array.
+              Dim inputBytes As Byte() = Encoding.UTF8.GetBytes(input)
+          
+              ' Create an instance of the Aes class.
+              Using aes As Aes = Aes.Create()
+                ' Set the key and IV for the Aes algorithm.
+                aes.Key = Encoding.UTF8.GetBytes(key)
+                aes.IV = New Byte(15) {}
+          
+                ' Create a memory stream to hold the encrypted data.
+                Using ms As New MemoryStream()
+                  ' Create a CryptoStream to encrypt the data.
+                  Using cs As New CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write)
+                    ' Write the data to the CryptoStream.
+                    cs.Write(inputBytes, 0, inputBytes.Length)
+                    cs.FlushFinalBlock()
+          
+                    ' Return the encrypted data as a base64-encoded string.
+                    Return Convert.ToBase64String(ms.ToArray())
+                  End Using
+                End Using
+              End Using
+            End Function
+          
+            Private Function DecryptString(input As String, key As String) As String
+              ' Convert the input string from a base64-encoded string to a byte array.
+              Dim inputBytes As Byte() = Convert.FromBase64String(input)
+          
+              ' Create an instance of the Aes class.
+              Using aes As Aes = Aes.Create()
+                ' Set the key and IV for the Aes algorithm.
+                aes.Key = Encoding.
+          
           </code>
         </pre>
     </main>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Other page</title>
+    <title>Encryption Utilities</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="styles.css" />
@@ -10,12 +10,45 @@
   <body>
     <nav>
       <a href="/">Home</a>
-      <a href="/page2.html" aria-current="page">Other page</a>
+      <a href="/page2.html" aria-current="page">Encryption Utility Activity</a>
     </nav>
     <main>
-      <h1>My other page</h1>
+      <h1>Hashing vb.net Example</h1>
       <pre>
           <code>
+          Imports System.Security.Cryptography
+
+          Module Program
+            Sub Main()
+              Dim input As String = "Hello, world!"
+          
+              ' Create a function that hashes a string.
+              Dim hash As String = HashString(input)
+              Console.WriteLine(hash)
+          
+              ' Create a function that dehashes a string.
+              Dim dehashed As String = DehashString(hash)
+              Console.WriteLine(dehashed)
+            End Sub
+          
+            ' This function hashes a string using the SHA256 algorithm.
+            Function HashString(input As String) As String
+              Using hasher As SHA256 = SHA256.Create()
+                Dim bytes As Byte() = hasher.ComputeHash(Encoding.UTF8.GetBytes(input))
+                Return Convert.ToBase64String(bytes)
+              End Using
+            End Function
+          
+            ' This function dehashes a string by reversing the hash operation.
+            Function DehashString(input As String) As String
+              Using hasher As SHA256 = SHA256.Create()
+                Dim bytes As Byte() = Convert.FromBase64String(input)
+                Dim dehashed As Byte() = hasher.ComputeHash(bytes)
+                Return Encoding.UTF8.GetString(dehashed)
+              End Using
+            End Function
+          End Module
+          
           </code>
         </pre>
     </main>
